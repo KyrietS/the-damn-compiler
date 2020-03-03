@@ -1,0 +1,46 @@
+[ 0, 1, 2, 3 ]
+DECLARE
+    a, b, c
+BEGIN
+    a ASSIGN 3;
+    b ASSIGN 5;
+    c ASSIGN -3;
+
+    IF a EQ b THEN
+        WRITE -1;
+    ELSE 
+        IF a EQ c THEN
+            WRITE -2;
+        ELSE 
+            IF a GE b THEN
+                WRITE -3;
+            ELSE 
+                IF a LEQ c THEN
+                    WRITE -4;
+                ELSE 
+                    IF a NEQ a THEN
+                        WRITE -5;
+                    ELSE 
+                        IF c LEQ c THEN
+                             WRITE 0;    [Jeśli to się wypisze, to jest OK]
+                        ELSE
+                             WRITE -6;
+                        ENDIF
+                    ENDIF
+                ENDIF
+            ENDIF
+        ENDIF
+    ENDIF
+    IF a GEQ a THEN
+        WRITE 1;
+    ENDIF
+    IF a EQ a THEN
+        WRITE 2;
+    ENDIF
+    c ASSIGN c TIMES -1;
+    IF a EQ c THEN
+        WRITE 3;
+    ENDIF
+
+END
+

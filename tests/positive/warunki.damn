@@ -1,0 +1,38 @@
+[ 1, 2, 3 ]
+DECLARE
+    a, b, c
+BEGIN
+    a ASSIGN 3;
+    b ASSIGN 5;
+    c ASSIGN -3;
+
+    IF a EQ b THEN
+        WRITE -1;
+    ENDIF
+    IFaEQcTHENWRITE-2;ENDIF
+    IF a GE b THEN WRITE -3; ENDIF
+    IF a LEQ c THEN
+        WRITE -4;
+    ENDIF
+    IF a NEQ a THEN
+        WRITE -5;
+    ENDIF
+    IF c EQ 0 THEN
+        WRITE -6;
+    ENDIF
+    IF c LE c THEN
+        WRITE -7;
+    ELSE
+        IF a GEQ a THEN
+            WRITE 1;
+        ENDIF
+        IF a EQ a THEN
+            WRITE 2;
+        ENDIF
+        c ASSIGN c TIMES -1;
+        IF a EQ c THEN
+            WRITE 3;
+        ENDIF
+    ENDIF
+END
+

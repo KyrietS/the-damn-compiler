@@ -1,0 +1,7 @@
+[ Błąd w linii 5: użycie niezainicjowanej zmiennej a ]
+DECLARE
+  tab(0:2), a
+BEGIN
+  tab(0) ASSIGN 2;
+  WRITE tab(a);
+END

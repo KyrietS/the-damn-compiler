@@ -1,0 +1,7 @@
+[ Array index range is incorrect ]
+
+DECLARE
+    tab( 5:0 )
+BEGIN
+    WRITE tab(5);
+END

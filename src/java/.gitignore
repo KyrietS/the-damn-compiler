@@ -1,0 +1,5 @@
+# Ignorowanie źródeł wygenerowanych przez JFlex'a i CUP'a (wszystko)
+*
+
+# Za wyjątkiem tego pliku
+!.gitignore

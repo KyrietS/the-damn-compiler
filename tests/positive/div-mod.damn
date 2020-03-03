@@ -1,0 +1,23 @@
+[ 1 ]
+DECLARE
+    a, b, c, d,
+    result
+BEGIN
+    a ASSIGN 23;
+    IF a NEQ 23 THEN
+        WRITE -1;
+    ENDIF
+    b ASSIGN -7;
+    IF b NEQ -7 THEN
+        WRITE -2;
+    ENDIF
+    c ASSIGN a DIV b; 
+    d ASSIGN a MOD b;
+    result ASSIGN c TIMES b;
+    result ASSIGN result PLUS d;
+    IF result NEQ a THEN
+        WRITE -3;
+    ENDIF
+    WRITE 1;
+END
+

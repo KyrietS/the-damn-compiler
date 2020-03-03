@@ -1,0 +1,3 @@
+#!/bin/bash
+
+java -jar build/cup/java-cup-11b.jar $@

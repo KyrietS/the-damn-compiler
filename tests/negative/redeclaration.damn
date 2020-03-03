@@ -1,0 +1,7 @@
+[ Variable 'b' is already declared ]
+DECLARE
+    a, b, 
+    b, c, d
+BEGIN
+    WRITE a;
+END

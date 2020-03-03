@@ -1,0 +1,144 @@
+import java_cup.runtime.Symbol;
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.ComplexSymbolFactory.Location;
+import java_cup.runtime.*;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
+import condition.*;
+import declaration.*;
+import expression.*;
+import identifier.*;
+import statement.*;
+import value.*;
+
+parser code {:
+
+    // Przygotowywanie komunikatu błędu do wyświetlenia.
+    @Override
+    public void report_error(String message, Object info) {
+        if(info instanceof ComplexSymbolFactory.ComplexSymbol){
+            ComplexSymbolFactory.ComplexSymbol symbol = (ComplexSymbolFactory.ComplexSymbol)info;
+            List<String> expectedList = expected_token_names();
+            String expected = expectedList.isEmpty() ? "" : "Expected tokens: " + expectedList;
+            Utils.reportError(message, "for symbol '"+symbol.getName()+"'. "+expected, symbol.getLeft(), symbol.getRight());
+        } else {
+            Utils.reportError(message, "", null, null);
+        }
+    }
+
+    // Błąd składni. Wczytano nieoczekiwany symbol 'symbol'.
+    @Override
+    public void syntax_error(Symbol symbol) {
+        report_error("Syntax error", symbol);
+        throw new Error("Cannot continue due to syntax errors.");      // Zakończ dalsze przetwarzanie pliku
+    }
+
+    // Pomocnicza funkcja, zwraca nazwy oczekiwanych tokenów.
+    private List<String> expected_token_names() {
+        List<Integer> ids = this.expected_token_ids();
+        if(ids == null) return new LinkedList<String>();
+        LinkedList<String> names = new LinkedList<String>();
+        for(Integer id : ids) {
+            names.add(this.symbl_name_from_id(id));
+        }
+        return names;
+    }
+:}
+
+/* Operatory arytmetyczne */
+terminal PLUS, MINUS, TIMES, DIV, MOD;
+
+/* Operatory relacji */
+terminal EQ, NEQ, GT, LT, GEQ, LEQ;
+
+/* Pozostałe operatory */
+terminal ASSIGN, LPAREN, RPAREN, SEMICOLON, COLON, COMMA;
+
+/* Słowa kluczowe */
+terminal DECLARE, BEGIN, END, READ, WRITE;
+/* Warunki */
+terminal IF, THEN, ELSE, ENDIF;
+/* Pętle */
+terminal WHILE, DO, ENDWHILE, ENDDO, FOR, FROM, TO, DOWNTO, ENDFOR;
+
+terminal Long NUM;
+terminal String ID;
+
+non terminal Program P;                 // Program
+non terminal List<Statement> SL;        // Commands List
+non terminal List<Declaration> DL;      // Declarations List
+non terminal Declaration D;             // Declaration
+non terminal Statement S;               // Statement
+non terminal Expression E;              // Expression
+non terminal BinaryRelation C;          // Binary Relation (condition)
+non terminal Value V;                   // Value
+non terminal Identifier I;              // Identifier
+
+precedence left EQ, NEQ, LT, GT, LEQ, GEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIV, MOD;
+
+// Program to lista instrukcji (może być poprzedzona listą deklaracji) 
+P   ::= DECLARE DL:dl BEGIN SL:sl END   {: RESULT = new Program(sl, dl); :}
+    |   BEGIN SL:sl END                 {: RESULT = new Program(sl); :}
+    ;
+
+// Lista deklaracji
+DL  ::= DL:dl COMMA D:d {: dl.add(d); RESULT = dl; :}
+    |   D:d             {: RESULT = new ArrayList<Declaration>(); RESULT.add(d); :}
+    ;
+
+// Deklaracja zmiennej lub tablicy
+D   ::= ID:i                                    {: RESULT = new NumberDeclaration(i, ixleft, ixright); :}
+    |   ID:i LPAREN NUM:a COLON NUM:b RPAREN:t  {: RESULT = new ArrayDeclaration(i, ixleft, txright, a, b); :}
+    ;
+
+// Lista instrukcji to ciąg instrukcji (może być pusty)
+SL  ::= SL:sl S:s           {: sl.add(s); RESULT = sl; :}
+    |   S:s                 {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
+    ;
+
+// Typy instrukcji
+S   ::= I:i ASSIGN E:e SEMICOLON                        {: RESULT = new AssignStatement(i, e); :}
+    |   IF C:c THEN SL:sl ELSE SL:esl ENDIF             {: RESULT = new IfElseStatement(c, sl, esl); :}
+    |   IF C:c THEN SL:sl ENDIF                         {: RESULT = new IfStatement(c, sl); :}
+    |   WHILE C:c DO SL:sl ENDWHILE                     {: RESULT = new WhileDoLoop(c, sl); :}
+    |   DO SL:sl WHILE C:c ENDDO                        {: RESULT = new DoWhileLoop(c, sl); :}
+    |   FOR I:i FROM V:v1 TO V:v2 DO SL:sl ENDFOR       {: RESULT = new ForToLoop(i, v1, v2, sl); :}
+    |   FOR I:i FROM V:v1 DOWNTO V:v2 DO SL:sl ENDFOR   {: RESULT = new ForDowntoLoop(i, v1, v2, sl); :}
+    |   READ I:i SEMICOLON                              {: RESULT = new ReadStatement(i); :}
+    |   WRITE V:v SEMICOLON                             {: RESULT = new WriteStatement(v); :}
+    ;
+
+// Typy wyrażeń
+E   ::= V:v                 {: RESULT = new ValueExpression(v); :}
+    |   V:v1 PLUS V:v2      {: RESULT = new AddExpression(v1, v2); :}
+    |   V:v1 MINUS V:v2     {: RESULT = new SubExpression(v1, v2); :}
+    |   V:v1 TIMES V:v2     {: RESULT = new MulExpression(v1, v2); :}
+    |   V:v1 DIV V:v2       {: RESULT = new DivExpression(v1, v2); :}
+    |   V:v1 MOD V:v2       {: RESULT = new ModExpression(v1, v2); :}
+    ;
+
+// Typy warunków
+C   ::= V:v1 EQ V:v2        {: RESULT = new EQRelation(v1, v2); :}
+    |   V:v1 NEQ V:v2       {: RESULT = new NEQRelation(v1, v2); :}
+    |   V:v1 LT V:v2        {: RESULT = new LTRelation(v1, v2); :}
+    |   V:v1 GT V:v2        {: RESULT = new GTRelation(v1, v2); :}
+    |   V:v1 LEQ V:v2       {: RESULT = new LEQRelation(v1, v2); :}
+    |   V:v1 GEQ V:v2       {: RESULT = new GEQRelation(v1, v2); :}
+    ;
+
+// Typy wartości
+V   ::= NUM:n               {: RESULT = new NumberValue(n); :}
+    |   I:i                 {: RESULT = new IdentifierValue(i); :}
+    ;
+
+// Typy identyfikatorów
+I   ::= ID:i                          {: RESULT = new VariableIdentifier(i, ixleft, ixright); :}
+    |   ID:i LPAREN ID:ii RPAREN:t    {: RESULT = new ArrayVarIdentifier(i, ixleft, txright, 
+                                                                        new VariableIdentifier(ii, iixleft, iixright)); :}
+    |   ID:i LPAREN NUM:n RPAREN:t    {: RESULT = new ArrayNumIdentifier(i, ixleft, txright, n); :}
+    ;
