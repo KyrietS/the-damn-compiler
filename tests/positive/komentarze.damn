@@ -1,0 +1,11 @@
+[ 0 ]
+DECLARE [###]
+    a [###],[###] b
+[###]BEGIN[###]
+    [###]aASSIGN[###]1[###];[###][###]
+    b[] ASSIGN[] 2[];
+    
+    IF[###]aLE[###]b[]THEN[]WRITE[]0[];
+    ELSEWRITE1;ENDIF
+
+END

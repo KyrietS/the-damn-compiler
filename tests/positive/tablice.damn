@@ -1,0 +1,92 @@
+[ 0 ]
+DECLARE
+    a, taba(0:0), b, tabb(-1:-1), c, tabc(-5:-1),
+    d, tabd(-2:0), e, tabe(-3:3), f, tabf(5:7), temp
+BEGIN
+    a ASSIGN 0;
+    b ASSIGN 0;
+    c ASSIGN 0;
+    d ASSIGN 0;
+    e ASSIGN 0;
+    f ASSIGN 0;
+    [ tablica A ]
+    FOR i FROM 0 TO 0 DO
+        taba(i) ASSIGN i PLUS 1;
+    ENDFOR
+    [ tablica B ]
+    FOR i FROM -1 DOWNTO -1 DO
+        tabb(i) ASSIGN i PLUS 10;
+    ENDFOR
+    [ tablica C ]
+    FOR i FROM -5 TO -1 DO
+        tabc(i) ASSIGN i MINUS 3;
+    ENDFOR
+    [ tablica D ]
+    FOR i FROM -2 TO 0 DO
+        tabd(i) ASSIGN i PLUS 13;
+    ENDFOR
+    [ tablica E ]
+    FOR i FROM 3 DOWNTO -3 DO
+        tabe(i) ASSIGN i PLUS 7;
+    ENDFOR
+    [ tablica F ]
+    FOR i FROM 5 TO 7 DO
+        tabf(i) ASSIGN i MINUS 1;
+    ENDFOR
+
+    [ Sprawdzenie wartości ]
+    [ tablica A ]
+    FOR i FROM 0 TO 0 DO
+        temp ASSIGN i PLUS 1;
+        IF taba(i) NEQ temp THEN WRITE -1; ENDIF
+    ENDFOR
+    [ tablica B ]
+    FOR i FROM -1 DOWNTO -1 DO
+        temp ASSIGN i PLUS 10;
+        IF tabb(i) NEQ temp THEN WRITE -2; ENDIF
+    ENDFOR
+    [ tablica C ]
+    FOR i FROM -5 TO -1 DO
+        temp ASSIGN i MINUS 3;
+        IF tabc(i) NEQ temp THEN WRITE -3; ENDIF
+    ENDFOR
+    [ tablica D ]
+    FOR i FROM -2 TO 0 DO
+        temp ASSIGN 13 PLUS i;
+        IF tabd(i) NEQ temp THEN WRITE -4; ENDIF
+    ENDFOR
+    [ tablica E ]
+    FOR i FROM 3 DOWNTO -3 DO
+        temp ASSIGN 7 PLUS i;
+        IF tabe(i) NEQ temp THEN WRITE -5; ENDIF
+    ENDFOR
+    [ tablica F ]
+    FOR i FROM 5 TO 7 DO
+        temp ASSIGN i MINUS 1;
+        IF tabf(i) NEQ temp THEN WRITE -6; ENDIF
+    ENDFOR
+
+    taba(0) ASSIGN 0;
+    tabb(-1) ASSIGN 2;
+    tabc(-3) ASSIGN 3;
+    taba(0) ASSIGN tabb(-1) PLUS tabc(-3);  [2 + 3]
+    IF taba(0) NEQ 5 THEN WRITE -7; ENDIF
+
+    taba(0) ASSIGN 2;
+    tabc(-2) ASSIGN -7;
+    temp ASSIGN 0;
+    tabd(temp) ASSIGN taba(temp);               [tabd(0) = taba(0) = 2 ]
+    taba(temp) ASSIGN tabc(-2) PLUS tabd(temp); [taba(0) = -7 + 2 = -5]
+    IF taba(0) NEQ -5 THEN WRITE -8; ENDIF
+    IF taba(temp) NEQ -5 THEN WRITE -9; ENDIF
+
+
+    IF a NEQ 0 THEN WRITE -11; ENDIF
+    IF b NEQ 0 THEN WRITE -12; ENDIF
+    IF c NEQ 0 THEN WRITE -13; ENDIF
+    IF d NEQ 0 THEN WRITE -14; ENDIF
+    IF e NEQ 0 THEN WRITE -16; ENDIF
+    IF f NEQ 0 THEN WRITE -15; ENDIF
+
+    WRITE 0;
+END

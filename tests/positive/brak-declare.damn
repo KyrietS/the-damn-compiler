@@ -1,0 +1,4 @@
+[ 0 ]
+BEGIN
+   WRITE 0; 
+END

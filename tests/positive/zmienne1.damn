@@ -1,0 +1,17 @@
+[ 0 ]
+DECLARE a, b
+    , c, d(0:0), e
+BEGIN
+    a ASSIGN 1;
+    b ASSIGN 2;
+    c ASSIGN 3;
+    d(0) ASSIGN 4;
+    e ASSIGN 5;
+
+    IF a NEQ 1 THEN WRITE 1; ENDIF
+    IF b NEQ 2 THEN WRITE 2; ENDIF
+    IF c NEQ 3 THEN WRITE 3; ENDIF
+    IF d(0) NEQ 4 THEN WRITE 4; ENDIF
+    IF e NEQ 5 THEN WRITE 5; ENDIF
+    WRITE 0;
+END

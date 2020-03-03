@@ -1,0 +1,6 @@
+[ Cannot ASSIGN value into For-Loop iterator ]
+BEGIN
+    FOR i FROM 0 TO 10 DO
+        i ASSIGN 5;
+    ENDFOR
+END

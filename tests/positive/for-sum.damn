@@ -1,0 +1,16 @@
+[0, 3775, 0]
+DECLARE
+    a
+BEGIN
+    a ASSIGN 0;
+    WRITE a;
+    FOR i FROM -50 TO 100 DO
+        a ASSIGN a PLUS i;   
+    ENDFOR
+    WRITE a;
+    FOR i FROM 100 DOWNTO -50 DO
+        a ASSIGN a MINUS i;
+    ENDFOR
+    WRITE a;
+END
+
